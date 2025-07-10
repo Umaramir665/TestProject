@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Evidence Preview</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 10px;
+      background-color: #f4f4f4;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+      margin-top: 0;
+    }
+
+    .section {
+      margin-bottom: 16px;
+      padding: 12px;
+      background: #fff;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+
+    .section h4 {
+      margin: 0 0 6px;
+      color: #2564cf;
+      font-size: 0.95rem;
+    }
+
+    .section p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #333;
+      white-space: pre-wrap;
+    }
+
+    .button-container {
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 10px 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .download-btn {
+      background-color: #2564cf;
+      color: white;
+    }
+
+    .download-btn:hover {
+      background-color: #1b4da5;
+    }
+
+    .dispatch-btn {
+      background-color: #107c10;
+      color: white;
+    }
+
+    .dispatch-btn:hover {
+      background-color: #0b6a0b;
+    }
+  </style>
+</head>
+<body>
+  <h2>
+  <img src="assets/parcel-80.png" alt="Dispatch" style="height: 24px; vertical-align: middle; margin-right: 1px;">
+  Dispatch Evidence
+  </h2>
+
+  <p>Below is the data prepared for submission to Evident Proof</p> 
+
+  <div id="content">Preparing evidence...</div>
+  
+  <div style="margin-bottom: 12px;">
+    <span id="downloadBtn" style="color: #2564cf; text-decoration: none; cursor: pointer; font-size: 0.95rem;">
+      📄 Download Evidence
+    </span>
+  </div>
+  <div id="buttons" style="display: none; margin-top: 20px; width: 100%;">  
+    <button class="dispatch-btn" id="dispatchBtn" style="width: 100%; display: flex; align-items: center; justify-content: center;">
+      <img src="assets/parcel-80.png" alt="Dispatch" style="height: 18px; vertical-align: middle; margin-right: 6px;">
+      Dispatch Evidence
+    </button>
+
+  </div> 
+  <script>
+    Office.onReady(() => {
+      const rs = Office.context.roamingSettings;
+      const apiKey = rs.get("apiKey") || "";
+      const agreementId = rs.get("agreementId") || "";
+
+      const item = Office.context.mailbox.item;
+      const evidence = [];
+      let payload = null;
+
+      const pushIfValid = (key, value) => {
+        if (value && value.trim() !== "") {
+          evidence.push({ key, value });
+        }
+      };
+
+     const parseEmail = (input, fallback) => {
+      if (!input) return fallback || "";
+        const match = /<([^>]+)>/.exec(input);
+        if (match && match[1]) {
+          return match[1].trim();
+        }
+        // Fallback if input is already an email (no brackets)
+        return input.includes("@") ? input.trim() : (fallback || "");
+      };
+
+      const getRecipientEmails = (list) => {
+        if (!Array.isArray(list)) return "";
+        return list
+          .map(r => parseEmail(r.displayName || r.emailAddress?.address || ""))
+          .filter(email => !!email)
+          .join(", ");
+      };
+
+      // From
+      if (item.from) {
+        console.log(item.from);
+        const email = parseEmail(item.from.emailAddress || item.from.displayName|| "");
+        pushIfValid("From", email);
+      }
+
+      // To, CC, BCC
+      pushIfValid("To", getRecipientEmails(item.to));
+      pushIfValid("CC", getRecipientEmails(item.cc));
+      pushIfValid("BCC", getRecipientEmails(item.bcc));
+
+      pushIfValid("Subject", item.subject || "");
+      pushIfValid("DateTime", item.dateTimeCreated?.toISOString?.() || new Date().toISOString());
+
+      item.body.getAsync("text", result => {
+        if (result.status === Office.AsyncResultStatus.Succeeded) {
+          pushIfValid("Body", result.value || "");
+        }
+
+        payload = {
+          evidence,
+          tags: ["Outlook", "Evidence"],
+          header: {
+            sourceSystemDispatchReference: "OutlookAddin",
+            serviceAgreementIdentifier: agreementId,
+            where: "Outlook",
+            when: new Date().toISOString()
+          }
+        };
+
+        // Render evidence in styled blocks (not JSON)
+        const contentDiv = document.getElementById("content");
+        contentDiv.innerHTML = "";
+        evidence.forEach(({ key, value }) => {
+          const section = document.createElement("div");
+          section.className = "section";
+
+          const title = document.createElement("h4");
+          title.textContent = key;
+
+          const content = document.createElement("p");
+          content.textContent = value;
+
+          section.appendChild(title);
+          section.appendChild(content);
+          contentDiv.appendChild(section);
+        });
+
+        document.getElementById("buttons").style.display = "flex";
+      });
+
+      // document.getElementById("downloadBtn").addEventListener("click", () => {
+      //   if (!payload) return;
+      //   const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+      //   const url = URL.createObjectURL(blob);
+      //   const link = document.createElement("a");
+      //   link.href = url;
+      //   link.download = "evidence.json";
+      //   document.body.appendChild(link);
+      //   link.click();
+      //   document.body.removeChild(link);
+      //   URL.revokeObjectURL(url);
+      // });
+
+      document.getElementById("downloadBtn").addEventListener("click", () => {
+        if (!evidence || evidence.length === 0) return;
+
+        let textContent = "\n";
+        evidence.forEach(({ key, value }) => {
+          textContent += `${key}:\n${value}\n\n`;
+        });
+
+        const blob = new Blob([textContent], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "evidence.txt";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+      });
+
+
+      document.getElementById("dispatchBtn").addEventListener("click", () => {
+        if (!payload) return;
+        console.log("🚀 Dispatching Evidence Payload:\n", payload); 
+      });
+    });
+  </script>
+</body>
+</html>
