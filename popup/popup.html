@@ -71,27 +71,64 @@
     .dispatch-btn:hover {
       background-color: #0b6a0b;
     }
+    #loader-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.spinner {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #2564cf;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 0.9s linear infinite;
+  margin-bottom: 12px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
   </style>
 </head>
 <body>
-  <h2> 
+  <h2>
   <img src="/TestProject/assets/parcel-80.png" alt="Dispatch" style="height: 24px; vertical-align: middle; margin-right: 1px;">
   Dispatch Evidence
   </h2>
 
   <p>Below is the data prepared for submission to Evident Proof</p> 
+  <div id="loader-overlay">
+    <div class="spinner"></div> 
+  </div>
 
-  <div id="content">Preparing evidence...</div>
+  <div id="content" style="display: none;"></div>
+
+  <!-- <div id="content">Preparing evidence...</div> -->
   
   <div style="margin-bottom: 12px;">
     <span id="downloadBtn" style="color: #2564cf; text-decoration: none; cursor: pointer; font-size: 0.95rem;">
-      📄 Download Evidence
+      ⬇️ Download Evidence
     </span>
   </div>
   <div id="buttons" style="display: none; margin-top: 20px; width: 100%;">  
     <button class="dispatch-btn" id="dispatchBtn" style="width: 100%; display: flex; align-items: center; justify-content: center;">
-      <img src="/TestProject/assets/parcel-80.png" alt="Dispatch" style="height: 18px; vertical-align: middle; margin-right: 6px;">
-      Dispatch Evidence
+      <!-- <img src="assets/parcel-80.png" alt="Dispatch" style="height: 18px; vertical-align: middle; margin-right: 6px;"> -->
+    <span style="display: inline-block;margin-right: 8px; transform: rotate(-90deg); font-size: 1.5rem;">
+  ⤵ 
+</span>   Dispatch Evidence
     </button>
 
   </div> 
@@ -101,15 +138,36 @@
       const apiKey = rs.get("apiKey") || "";
       const agreementId = rs.get("agreementId") || "";
 
-      const item = Office.context.mailbox.item;
-      const evidence = [];
-      let payload = null;
 
-      const pushIfValid = (key, value) => {
-        if (value && value.trim() !== "") {
-          evidence.push({ key, value });
-        }
-      };
+      
+    // Check if config is missing
+    if (!apiKey || !agreementId) {
+      const loader = document.getElementById("loader-overlay");
+      const content = document.getElementById("content");
+      const buttons = document.getElementById("buttons");
+
+      if (loader) loader.style.display = "none";
+      if (buttons) buttons.style.display = "none";
+      if (content) {
+        content.style.display = "block";
+        content.innerHTML = `
+          <div style="text-align: center; padding: 40px;">
+            <h3 style="color: #d32f2f;">⚠️ Please set up configuration first.</h3>
+            <p style="color: #666;">API Key or Agreement ID is missing.</p>
+          </div>
+        `;
+      }
+
+      return; // Stop execution
+    }
+    const item = Office.context.mailbox.item;
+    const evidence = [];
+    let payload = null;
+    const pushIfValid = (key, value) => {
+      if (value && value.trim() !== "") {
+        evidence.push({ key, value });
+      }
+    };
 
      const parseEmail = (input, fallback) => {
       if (!input) return fallback || "";
@@ -159,6 +217,8 @@
             when: new Date().toISOString()
           }
         };
+        document.getElementById("loader-overlay").style.display = "none";
+        document.getElementById("content").style.display = "block";
 
         // Render evidence in styled blocks (not JSON)
         const contentDiv = document.getElementById("content");
@@ -214,10 +274,42 @@
       });
 
 
-      document.getElementById("dispatchBtn").addEventListener("click", () => {
-        if (!payload) return;
-        console.log("🚀 Dispatching Evidence Payload:\n", payload); 
+      document.getElementById("dispatchBtn").addEventListener("click", async () => {
+      if (!payload) return;
+
+      try {
+        console.log("🚀 Dispatching Evidence Payload:\n", payload);
+
+        const responseText = await dispatchEvidence(payload, apiKey);
+        console.log("✅ Dispatch successful:", responseText);
+
+        alert("✅ Evidence dispatched successfully!");
+      } catch (error) {
+        console.error("❌ Dispatch error:", error);
+        alert("❌ Failed to dispatch evidence.");
+      }
       });
+
+      function dispatchEvidence(payload, apiKey) {
+      const dispatchUrl = "https://localhost:44396/api/v2/Evidence/Dispatch";
+
+      return fetch(dispatchUrl, {
+        method: "PUT",
+        headers: {
+          "Accept": "text/plain",
+          "Authorization": apiKey,
+          "Content-Type": "application/json-patch+json"
+        },
+        body: JSON.stringify(payload)
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Dispatch failed with status ${response.status}`);
+          }
+          return response.text();
+        });
+      }
+
     });
   </script>
 </body>
