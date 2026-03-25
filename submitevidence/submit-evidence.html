@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Evidence Preview</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <link rel="stylesheet" href="submit-evidence.css" />
+
+</head>
+<body>
+  <h2>
+  <img src="https://evidentproof-client.azurewebsites.net/Ep_Outlook_Extension/assets/parcel-80.png" alt="Dispatch" style="height: 24px; vertical-align: middle; margin-right: 1px;">
+  Dispatch Evidence
+  </h2>
+
+  <p id="description">Below is the data prepared for submission to Evident Proof</p>
+  <div id="loader-overlay">
+    <div class="spinner"></div> 
+  </div>
+
+  <div id="auditContextSection" class="section" style="display: none;">
+    <h4>Proof certificate details</h4>
+
+    <div class="field">
+      <label class="field-label" for="eventStatement">Event statement</label>
+      <textarea id="eventStatement" class="field-input" rows="3" maxlength="2000" placeholder="Enter the event statement"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="eventStatementDefinition">Event statement definition</label>
+      <textarea id="eventStatementDefinition" class="field-input" rows="3" maxlength="2000" placeholder="Enter the event statement definition"></textarea>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="forTheAttentionOf">For the attention of</label>
+      <input id="forTheAttentionOf" class="field-input" type="text" maxlength="40" placeholder="Name / role" />
+    </div>
+  </div>
+
+  <div id="content" style="display: none;"></div> 
+  <div style="margin-bottom: 12px;">
+      <span id="downloadBtn" style="color: #2564cf; text-decoration: none; cursor: pointer; font-size: 0.95rem;">
+         <svg xmlns="http://www.w3.org/2000/svg"
+       width="18" height="18"
+       fill="currentColor"
+       viewBox="0 0 24 24"
+       style="vertical-align: middle;">
+    <path d="M12 3a1 1 0 0 1 1 1v10.586l3.293-3.293a1 1 0 0 1 1.414 1.414l-5 5a1 1 0 0 1-1.414 0l-5-5A1 1 0 1 1 7.707 11.293L11 14.586V4a1 1 0 0 1 1-1zm-9 16a1 1 0 0 1 1-1h16a1 1 0 1 1 0 2H4a1 1 0 0 1-1-1z"/>
+  </svg>
+ Download Evidence
+    </span>
+  </div>
+<div id="status" class="status" style="display: none; margin-top: 10px; font-weight: 600;"></div> 
+
+<div id="buttons" style="display: none; margin-top: 20px; width: 100%;">  
+  <button class="dispatch-btn" id="dispatchBtn" style="width: 100%; display: flex; align-items: center; justify-content: center;">
+    <span style="display: inline-block; margin-right: 8px; transform: rotate(-90deg)">
+      ⤵ 
+    </span>  
+    Dispatch Evidence
+  </button>
+</div>
+
+<!-- 🔽 Add this just after buttons -->
+  <script src="submit-evidence.js"></script>
+
+</body>
+</html>

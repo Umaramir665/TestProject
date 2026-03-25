@@ -14,6 +14,13 @@ body {
   background-color: var(--background);
   color: var(--text);
 }
+button.save-mode {
+  background-color: #107c10; /* green */
+}
+
+button.save-mode:hover {
+  background-color: #0b6a0b;
+}
 
 h2 {
   font-size: 1.1rem;

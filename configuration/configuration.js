@@ -14,10 +14,14 @@ Office.onReady(() => {
     statusBox.style.display = "block";
   }
 
-  function updateButtonUI() {
-    actionBtn.innerHTML = isEditMode
-      ? '<i class="fa fa-save"></i> Save'
-      : '<i class="fa fa-edit"></i> Edit';
+  function updateButtonUI() { 
+     if (isEditMode) {
+    actionBtn.innerHTML = '<i class="fa fa-save"></i>  Save';
+    actionBtn.classList.add("save-mode");
+  } else {
+    actionBtn.innerHTML = '<i class="fa fa-edit"></i>  Edit';
+    actionBtn.classList.remove("save-mode");
+  }
   }
 
   function loadSettings() {
@@ -62,7 +66,11 @@ Office.onReady(() => {
     rs.set("apiKey", apiKey);
     rs.set("agreementId", agreement);
     rs.set("savedOn", new Date().toISOString());
-
+	actionBtn.disabled = true;
+actionBtn.innerHTML = `
+  <span class="spinner" style="margin:0; display: inline-block; width: 12px; height: 12px; border: 2px solid #fff; border-top: 2px solid transparent; border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px;"></span>
+  Saving...
+`;
     rs.saveAsync((result) => {
       if (result.status === Office.AsyncResultStatus.Succeeded) {
         apiKeyInput.readOnly = true;
@@ -73,6 +81,8 @@ Office.onReady(() => {
       } else {
         showStatus("❌ Failed to save settings.", "error");
       }
+	    actionBtn.disabled = false;
+
     });
   });
 
