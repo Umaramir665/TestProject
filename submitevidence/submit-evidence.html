@@ -18,21 +18,22 @@
     <div class="spinner"></div> 
   </div>
 
-  <div id="auditContextSection" class="section" style="display: none;">
+  <div id="auditContextSection" class="section audit-context" style="display: none;">
     <h4>Proof certificate details</h4>
+    <p class="section-subtitle">These fields are required and will be included in the dispatch header.</p>
 
     <div class="field">
-      <label class="field-label" for="eventStatement">Event statement</label>
+      <label class="field-label" for="eventStatement">Event statement <span class="required">*</span></label>
       <textarea id="eventStatement" class="field-input" rows="3" maxlength="2000" placeholder="Enter the event statement"></textarea>
     </div>
 
     <div class="field">
-      <label class="field-label" for="eventStatementDefinition">Event statement definition</label>
+      <label class="field-label" for="eventStatementDefinition">Event statement definition <span class="required">*</span></label>
       <textarea id="eventStatementDefinition" class="field-input" rows="3" maxlength="2000" placeholder="Enter the event statement definition"></textarea>
     </div>
 
     <div class="field">
-      <label class="field-label" for="forTheAttentionOf">For the attention of</label>
+      <label class="field-label" for="forTheAttentionOf">For the attention of <span class="required">*</span> <span class="hint">(max 40 chars)</span></label>
       <input id="forTheAttentionOf" class="field-input" type="text" maxlength="40" placeholder="Name / role" />
     </div>
   </div>

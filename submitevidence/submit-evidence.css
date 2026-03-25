@@ -25,6 +25,13 @@
       font-size: 0.95rem;
     }
 
+    .section-subtitle {
+      margin: 0 0 10px;
+      font-size: 0.82rem;
+      color: #666;
+      line-height: 1.35;
+    }
+
     .section p {
       margin: 0;
       font-size: 0.9rem;
@@ -32,8 +39,13 @@
       white-space: pre-wrap;
     }
 
+    .audit-context {
+      border-left: 4px solid #2564cf;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+    }
+
     .field {
-      margin-top: 10px;
+      margin-top: 12px;
     }
 
     .field-label {
@@ -42,6 +54,16 @@
       font-weight: 600;
       color: #333;
       margin-bottom: 6px;
+    }
+
+    .required {
+      color: #a4262c;
+      font-weight: 700;
+    }
+
+    .hint {
+      font-weight: 500;
+      color: #777;
     }
 
     .field-input {
