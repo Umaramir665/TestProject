@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
+  <Id>4208f204-28fb-497c-a2a3-6fb346e923b8</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Contoso</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Evident Proof Client"/>
+  <Description DefaultValue="A template to get started."/>
+  <IconUrl DefaultValue="https://umaramir665.github.io/TestProject/assets/logo.png"/>
+  <HighResolutionIconUrl DefaultValue="https://umaramir665.github.io/TestProject/assets/logo.png"/>
+  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+  <AppDomains>
+    <AppDomain>https://www.contoso.com</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://umaramir665.github.io/TestProject/configuration/configuration.html"/>
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadWriteItem</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+  </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Requirements>
+      <bt:Sets DefaultMinVersion="1.3">
+        <bt:Set Name="Mailbox"/>
+      </bt:Sets>
+    </Requirements>
+    <Hosts>
+      <Host xsi:type="MailHost">
+        <DesktopFormFactor>
+          <FunctionFile resid="Commands.Url"/>
+          <ExtensionPoint xsi:type="MessageReadCommandSurface">
+            <OfficeTab id="TabDefault">
+              <Group id="msgReadGroup">
+                <Label resid="GroupLabel" />
+                <Control xsi:type="Menu" id="EvidenceMenu">
+                  <Label resid="EvidenceMenu.Label" />
+                  <Supertip>
+                    <Title resid="EvidenceMenu.Label" />
+                    <Description resid="EvidenceMenu.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Icon.16x16" />
+                    <bt:Image size="32" resid="Icon.32x32" />
+                    <bt:Image size="80" resid="Icon.80x80" />
+                  </Icon>
+                  <Items>
+                    <Item id="OpenConfiguration">
+                      <Label resid="OpenConfiguration.Label" />
+                      <Supertip>
+                        <Title resid="OpenConfiguration.Label" /> 
+                        <Description resid="OpenConfiguration.Tooltip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Gear.16x16" />
+                        <bt:Image size="32" resid="Gear.32x32" />
+                        <bt:Image size="80" resid="Gear.80x80" />
+                      </Icon>
+                      <Action xsi:type="ShowTaskpane">
+                        <SourceLocation resid="Taskpane.Url" />
+                      </Action>
+                    </Item>
+                    <Item id="OpenSaveEvidence">
+                      <Label resid="OpenSaveEvidence.Label" />
+                      <Supertip>
+                        <Title resid="OpenSaveEvidence.Label" />
+                        <Description resid="OpenSaveEvidence.Tooltip" />
+                      </Supertip>
+                      <Icon>
+                        <bt:Image size="16" resid="Dispatch.16x16" />
+                        <bt:Image size="32" resid="Dispatch.32x32" />
+                        <bt:Image size="80" resid="Dispatch.80x80" />
+                      </Icon>
+                      <Action xsi:type="ShowTaskpane">
+                        <SourceLocation resid="popup.Url" />
+                      </Action>
+                    </Item>
+                  </Items>
+                </Control>
+              </Group> 
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Icon.16x16" DefaultValue="https://umaramir665.github.io/TestProject/assets/logo.png" />
+        <bt:Image id="Icon.32x32" DefaultValue="https://umaramir665.github.io/TestProject/assets/logo.png" />
+        <bt:Image id="Icon.80x80" DefaultValue="https://umaramir665.github.io/TestProject/assets/logo.png" />
+        <bt:Image id="Gear.16x16" DefaultValue="https://umaramir665.github.io/TestProject/assets/gear-16.png" />
+        <bt:Image id="Gear.32x32" DefaultValue="https://umaramir665.github.io/TestProject/assets/gear-32.png" />
+        <bt:Image id="Gear.80x80" DefaultValue="https://umaramir665.github.io/TestProject/assets/gear-80.png" />
+        <bt:Image id="Dispatch.16x16" DefaultValue="https://umaramir665.github.io/TestProject/assets/parcel-16.png" />
+        <bt:Image id="Dispatch.32x32" DefaultValue="https://umaramir665.github.io/TestProject/assets/parcel-32.png" />
+        <bt:Image id="Dispatch.80x80" DefaultValue="https://umaramir665.github.io/TestProject/assets/parcel-80.png" />
+      </bt:Images>
+
+      <bt:Urls>
+        <bt:Url id="Commands.Url" DefaultValue="https://umaramir665.github.io/TestProject/commands.html" />
+        <bt:Url id="popup.Url" DefaultValue="https://umaramir665.github.io/TestProject/submitevidence/submit-evidence.html" />
+        <bt:Url id="Taskpane.Url" DefaultValue="https://umaramir665.github.io/TestProject/configuration/configuration.html" />
+      </bt:Urls>
+
+      <bt:ShortStrings>
+        <bt:String id="GroupLabel" DefaultValue="Evidence Tools" />
+        <bt:String id="SaveEvidenceButton.Label" DefaultValue="Save to Evidence" />
+        <bt:String id="EvidenceMenu.Label" DefaultValue="Evident Proof Client" />
+        <bt:String id="EvidenceMenu.Tooltip" DefaultValue="Configure &amp; Dispatch" />
+
+        <bt:String id="OpenConfiguration.Label" DefaultValue="Configuration" />
+        <bt:String id="OpenConfiguration.Tooltip" DefaultValue="Configure your API key and Agreement ID" />
+
+        <bt:String id="OpenSaveEvidence.Label" DefaultValue="Dispatch Evidence" />
+        <bt:String id="OpenSaveEvidence.Tooltip" DefaultValue="Save the selected email as evidence" />
+      </bt:ShortStrings>
+
+      <bt:LongStrings>
+        <bt:String id="EvidenceMenu.Label" DefaultValue="Evident Proof Client" />
+        <bt:String id="EvidenceMenu.Tooltip" DefaultValue="Configure &amp; Dispatch" />
+
+        <bt:String id="OpenConfiguration.Label" DefaultValue="Configuration" />
+        <bt:String id="OpenConfiguration.Tooltip" DefaultValue="Configure your API key and Agreement ID" />
+
+        <bt:String id="OpenSaveEvidence.Label" DefaultValue="Dispatch Evidence" />
+        <bt:String id="OpenSaveEvidence.Tooltip" DefaultValue="Save the selected email as evidence" />
+      </bt:LongStrings>
+    </Resources> 
+  </VersionOverrides>
+</OfficeApp>
+
