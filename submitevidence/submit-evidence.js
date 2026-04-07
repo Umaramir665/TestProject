@@ -198,7 +198,7 @@ statusBox.style.display = "block";
 
   function dispatchEvidence(payload, apiKey) {
     //console.log(payload);
-  const dispatchUrl = "https://evidentproof-api.azurewebsites.net/api/v2/Evidence/Dispatch";
+  const dispatchUrl = "https://localhost:44396/api/v2/Evidence/Dispatch";
 
   return fetch(dispatchUrl, {
     method: "PUT",
