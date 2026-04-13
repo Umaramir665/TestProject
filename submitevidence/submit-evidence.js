@@ -150,7 +150,7 @@ const pushIfValid = (key, value) => {
 
       const eventDefField = document.getElementById("eventStatementDefinition");
       if (eventDefField) {
-        eventDefField.value = subject + " | " + dateLabel + ": " + formattedDate;
+        eventDefField.value = subject + " | " + formattedDate;
       }
     } catch (e) {
       console.error("Auto-populate eventStatementDefinition failed:", e);
