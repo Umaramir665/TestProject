@@ -134,6 +134,20 @@ const pushIfValid = (key, value) => {
     const auditContextSection = document.getElementById("auditContextSection");
     if (auditContextSection) auditContextSection.style.display = "block";
 
+    const currentUserEmail = (Office.context.mailbox.userProfile.emailAddress || "").toLowerCase();
+    const senderEmail = (item.from?.emailAddress || item.from?.displayName || "").toLowerCase();
+    const isSentByMe = currentUserEmail && senderEmail && currentUserEmail === senderEmail;
+
+    const dateTime = item.dateTimeCreated?.toISOString?.() || new Date().toISOString();
+    const formattedDate = new Date(dateTime).toLocaleString();
+    const dateLabel = isSentByMe ? "Sent" : "Received";
+    const subject = (item.subject && item.subject.trim()) ? item.subject.trim() : "(No Subject)";
+
+    const eventDefField = document.getElementById("eventStatementDefinition");
+    if (eventDefField) {
+      eventDefField.value = `${subject} | ${dateLabel}: ${formattedDate}`;
+    }
+
     // Render evidence in styled blocks (not JSON)
     const contentDiv = document.getElementById("content");
     contentDiv.innerHTML = "";
