@@ -134,18 +134,26 @@ const pushIfValid = (key, value) => {
     const auditContextSection = document.getElementById("auditContextSection");
     if (auditContextSection) auditContextSection.style.display = "block";
 
-    const currentUserEmail = (Office.context.mailbox.userProfile.emailAddress || "").toLowerCase();
-    const senderEmail = (item.from?.emailAddress || item.from?.displayName || "").toLowerCase();
-    const isSentByMe = currentUserEmail && senderEmail && currentUserEmail === senderEmail;
+    try {
+      const currentUserEmail = parseEmail(
+        Office.context.mailbox.userProfile.emailAddress || ""
+      ).toLowerCase();
+      const senderEmail = parseEmail(
+        item.from?.emailAddress || item.from?.displayName || ""
+      ).toLowerCase();
+      const isSentByMe = currentUserEmail && senderEmail && currentUserEmail === senderEmail;
 
-    const dateTime = item.dateTimeCreated?.toISOString?.() || new Date().toISOString();
-    const formattedDate = new Date(dateTime).toLocaleString();
-    const dateLabel = isSentByMe ? "Sent" : "Received";
-    const subject = (item.subject && item.subject.trim()) ? item.subject.trim() : "(No Subject)";
+      const rawDate = item.dateTimeCreated || item.dateTimeModified || new Date();
+      const formattedDate = new Date(rawDate).toLocaleString();
+      const dateLabel = isSentByMe ? "Sent" : "Received";
+      const subject = (item.subject && item.subject.trim()) ? item.subject.trim() : "(No Subject)";
 
-    const eventDefField = document.getElementById("eventStatementDefinition");
-    if (eventDefField) {
-      eventDefField.value = `${subject} | ${dateLabel}: ${formattedDate}`;
+      const eventDefField = document.getElementById("eventStatementDefinition");
+      if (eventDefField) {
+        eventDefField.value = subject + " | " + dateLabel + ": " + formattedDate;
+      }
+    } catch (e) {
+      console.error("Auto-populate eventStatementDefinition failed:", e);
     }
 
     // Render evidence in styled blocks (not JSON)
